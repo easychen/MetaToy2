@@ -1,8 +1,13 @@
 # MetaToy2
+
+![](images/icon.png)
+
 MetaToy 是一个通用代码生成工具。它包含两部分：
 
 1. 命令行 MetaToy Cli, 采用GPLv3 开源
 1. 图形界面  MetaToy UI, 不开源但可以免费使用
+
+![](images/20230114120244.png)
 
 ## 使用方式
 
