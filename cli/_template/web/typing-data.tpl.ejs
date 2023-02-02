@@ -1,0 +1,21 @@
+/* @MT-TPL-FILE
+ * @Desc: 前端临时输入数据
+ * @To: web/src/store/TypingData.jsx 
+ * @Replace: -
+ */
+const TypingData = {
+    index_page_name: '',
+    _token_name: '',
+    /* @MT-TPL-TYPING-START */
+    /* @Replace: append */
+    /* @SkipIf: _<%=OPT.the_name%>_ */
+    <%_ for( const field of H.fields(DATA,OPT.the_name,'create')??[]) { _%>
+    <%_ if( field.ui_type ){ _%>
+    _<%=OPT.the_name%>_<%=field.name%>: '', // <%=OPT.the_name%>
+    <%_ } // ui_type _%>
+    <%_ } _%>
+    /* @MT-TPL-TYPING-END */
+
+}
+
+export default TypingData;

@@ -1,0 +1,116 @@
+/* @MT-TPL-FILE
+ * @Desc: 前端后台菜单导航
+ * @To: web/src/component/BackendView.jsx
+ * @Replace: -
+ */
+ import { AppShell, Navbar, Header, Button, Menu, Group, Code, ScrollArea } from '@mantine/core';
+ import { useAtomValue, useSetAtom } from 'jotai';
+ import { appAtom, logoutAtom, globalAtom } from '../store/AppStore';
+ import { FiChevronDown, FiLogOut, FiPackage, FiKey } from 'react-icons/fi';
+ import { AiOutlineQrcode } from 'react-icons/ai';
+ import { RiDashboard3Line,RiWechatPayFill } from 'react-icons/ri';
+ import { FaRegDotCircle } from 'react-icons/fa';
+ import { FiCreditCard } from 'react-icons/fi';
+ import { CgProfile } from 'react-icons/cg';
+ import { NavLink } from 'react-router-dom';
+ import { showNotification } from '@mantine/notifications';
+ import { useNavigate } from 'react-router-dom';
+ import { useTranslation } from 'react-i18next';
+ 
+ export default function BackendView(props) {
+     const app = useAtomValue(appAtom);
+     const g = useAtomValue(globalAtom);
+     const logout = useSetAtom(logoutAtom);
+     const nav = useNavigate();
+     const { t } = useTranslation();
+ 
+     async function doLogout()
+     {
+         const ret = await logout();
+         console.log( 'logout', ret )
+         if( ret )
+         {
+             showNotification({'message': '已成功退出', 'status': 'success'});
+         }
+         window.setTimeout(()=>window.location='/login', 1000);
+         
+     }
+ 
+     return <>{( app && g.user ) ? 
+         <AppShell
+             padding="md"
+             navbarOffsetBreakpoint="xs"
+             navbar={<Navbar width={{ base: 200 }} className="pt-3 hidden md:flex md:flex-col">
+                 <Navbar.Section grow component={ScrollArea}>
+                   
+                     <NavLink to="/dashboard" className="nav-link p-3  hover:bg-blue-100 active:bg-blue-200 flex flex-row items-center border-b-1 border-gray-100"><RiDashboard3Line size={20} className="m-2"/>{t('dashboard')}</NavLink>
+ 
+                     <NavLink to="/user/api/token" className="nav-link p-3  hover:bg-blue-100 flex flex-row items-center"><FiKey size={20}  className="m-2"/>{t('api-token')}</NavLink>
+ 
+                     <NavLink to="/wechat/recharge" className="nav-link p-3  hover:bg-blue-100 flex flex-row items-center"><RiWechatPayFill size={20}  className="m-2"/>{t('wechat-recharge')}</NavLink>
+ 
+                     <NavLink to="/profile" className="nav-link p-3  hover:bg-blue-100 flex flex-row items-center"><CgProfile size={20}  className="m-2"/>{t('my-profile')}</NavLink>
+
+                     {/* @MT-TPL-NAV-START */
+                        /* @Replace: append */
+                        /* @Wrap: react */
+                        /* @SkipIf: to="/<%=OPT.the_name%>/list" */
+                       <NavLink to="/<%=OPT.the_name%>/list" className="nav-link p-3 hover:bg-blue-100 flex flex-row items-center"><FaRegDotCircle size={20}  className="m-2"/>{t('<%=OPT.the_name%>')}</NavLink>
+                       /* @MT-TPL-NAV-END */}
+     
+                 </Navbar.Section>
+   
+                 <Navbar.Section className="flex flex-row items-center justify-center my-5">
+                     <Button variant='outline' className="text-gray-400 font-normal border-gray-300" leftIcon={<FiPackage size={20} width={1}/>}>下载APP</Button>
+                 </Navbar.Section>
+   
+             </Navbar>}
+             header={<Header height={60} p="xs" className="flex flex-row items-center justify-between">
+               <div className=" left text-xl ml-5">{app.name}<span className="bg-blue-400 text-white rounded-full text-sm p-1 px-2 ml-2">{app.version}</span></div>
+               <div className="right mr-5 flex flex-row justify-end items-center">
+                   <div className="avatar mr-2"><img className="max-w-8 rounded-full" src={g.user?.avatar}/></div>
+                   <div className="name">{g.user?.name}</div>
+ 
+                     <div className="ml-2 bg-blue-400 rounded px-1 text-sm text-white">{g.user?.point}P</div>
+   
+                   <Menu width={200} position="bottom-end">
+                       <Menu.Target>
+                           <Button variant="white" color="gray" rightIcon={<FiChevronDown/>}></Button>
+                       </Menu.Target>
+                       <Menu.Dropdown>
+                        <Menu.Item icon={<AiOutlineQrcode/>} onClick={()=>nav('/user/app/qrcode')}>APP二维码</Menu.Item>
+                         
+                        
+                        <Menu.Item icon={<RiDashboard3Line/>} onClick={()=>nav('/dashboard')}>{t('dashboard')}</Menu.Item>
+                         
+                         <Menu.Item icon={<FiKey/>} onClick={()=>nav('/user/api/token')}>{t('api-token')}</Menu.Item>
+                         
+                         
+                         <Menu.Item icon={<RiWechatPayFill/>} onClick={()=>nav('/wechat/recharge')}>{t('wechat-recharge')}</Menu.Item>
+                         
+                         <Menu.Item icon={<CgProfile/>} onClick={()=>nav('/profile')}>{t('my-profile')}</Menu.Item>
+                         <Menu.Divider/>
+
+                         {/* @MT-TPL-NAV-TOP-START */
+                            /* @Replace: append */
+                            /* @Wrap: react */
+                            /* @SkipIf: nav('/<%=OPT.the_name%>/list') */
+                           <Menu.Item icon={<FaRegDotCircle/>} onClick={()=>nav('/<%=OPT.the_name%>/list')}>{t('<%=OPT.the_name%>')}</Menu.Item>
+                            /* @MT-TPL-NAV-TOP-END */}
+                         
+                        <Menu.Divider/>
+                        <Menu.Item icon={<FiLogOut/>} onClick={()=>doLogout()}>{t('logout')}</Menu.Item>
+                       </Menu.Dropdown>    
+                   </Menu>
+   
+   
+               </div>
+             </Header>}
+             styles={(theme) => ({
+               main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
+             })}
+           >
+             {props.children||null}
+           </AppShell> : <div className="msk-center"><Button onClick={()=>window.location='/login'} variant='light' className="font-normal">请先登入</Button></div>}</>
+         ;
+ }

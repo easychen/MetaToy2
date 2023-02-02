@@ -1,0 +1,18 @@
+/* @MT-TPL-FILE
+ * @Desc: Model基本模板
+ * @To: api/app/Models/<%=OPT.TheName%>.php 
+ * @Replace: -
+ */
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class <%=OPT.TheName%> extends Model
+{
+    use HasFactory;
+    protected $guarded = ['id'];
+    protected $table = '<%=OPT.the_name%>';
+}

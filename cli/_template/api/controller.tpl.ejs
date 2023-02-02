@@ -1,0 +1,124 @@
+/* @MT-TPL-FILE
+ * @Desc: API接口
+ * @To: api/app/Http/Controllers/<%=OPT.TheName%>Controller.php 
+ * @Replace: -
+ */
+<?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Models\<%= OPT.TheName %>;
+
+/* @MT-TPL-HEAD-START */
+/* @MT-TPL-HEAD-END */
+
+class <%= OPT.TheName %>Controller extends Controller
+{
+    public function __construct()
+    {
+        // 根据需要打开权限校验
+        $this->middleware('auth:sanctum');
+        // $this->middleware(['auth:sanctum','ability:moderator']);
+        // $this->middleware(['auth:sanctum','ability:admin']);
+    }
+    
+    
+    /**
+    * Display a listing of the resource.
+    *
+    * @return \Illuminate\Http\Response
+    */
+
+    public function search()
+    {
+        /* @MT-TPL-LIST-START */
+        $<%=OPT.the_name%>_array = <%=OPT.TheName%>::orderBy('id','desc')->get();
+        /* @MT-TPL-LIST-END */
+
+        return http_result( ['<%=OPT.the_name%>_array'=>$<%=OPT.the_name%>_array] );
+        
+    }
+
+    /**
+    * Store a newly created resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+    public function save(Request $request)
+    {
+        /* @MT-TPL-CREATE-VALIDATE-START */
+        $validated = $request->validate([
+            <%_ for( const field of H.fields(DATA,OPT.the_name,'create')??[])
+            { if( field.validate_string ){_%>
+            '<%=field.name%>'=>'<%=field.validate_string%>',
+            <%_ }} _%>
+        ]);
+        /* @MT-TPL-CREATE-VALIDATE-END */
+
+        // 来源数据赋值
+        /* @MT-TPL-CREATE-ASSIGNMENT-START */
+        <%_ for( const field of H.fields(DATA,OPT.the_name,'create')??[])
+        { if( field.source_func ){_%>
+        $validated['<%=field.name%>'] = <%=field.source_func%>;
+        <%_ }} _%>
+        /* @MT-TPL-CREATE-ASSIGNMENT-END */
+
+        // 默认值补全
+        /* @MT-TPL-CREATE-DEFAULT1-START */
+        <%_ for( const field of H.fields(DATA,OPT.the_name,'create')??[])
+        { if( field.default1 ){_%>
+        if( !isset($validated['<%=field.name%>']) ) $validated['<%=field.name%>'] = '';
+        <%_ }} _%>
+        /* @MT-TPL-CREATE-DEFAULT1-END */
+        
+        $<%=OPT.the_name%> = <%=OPT.TheName%>::create($validated);
+        return http_result( ['<%=OPT.the_name%>'=>$<%=OPT.the_name%>] );
+    }
+
+    /**
+    * Display the specified resource.
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
+    public function show($id)
+    {
+        /* @MT-TPL-DETAIL-START */
+        /* @MT-TPL-DETAIL-END */
+    }
+
+    /**
+    * Update the specified resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
+    public function update(Request $request, $id)
+    {
+        /* @MT-TPL-UPDATE-START */
+        /* @MT-TPL-UPDATE-END */
+    }
+
+    /**
+    * Remove the specified resource from storage.
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
+    public function remove(Request $request)
+    {
+        /* @MT-TPL-REMOVE-START */
+        $validated = $request->validate([
+            'id'=>'required|integer',
+        ]);
+        $<%=OPT.the_name%> = <%=OPT.TheName%>::find($validated['id']);
+        /* @MT-TPL-REMOVE-END */
+
+        $<%=OPT.the_name%>->delete();
+        return http_result( ['<%=OPT.the_name%>'=>$<%=OPT.the_name%>] );
+    }
+}
+
+
+

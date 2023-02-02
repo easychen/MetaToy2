@@ -1,0 +1,40 @@
+/* @MT-TPL-FILE
+ * @Desc: 前端store
+ * @To: web/src/store/<%=OPT.TheName%>.jsx
+ * @Replace: -
+ */
+import { atom } from 'jotai';
+import { typingAtom, globalAtom, mskPost, API_BASE, handleResult } from './AppStore';
+
+export const save<%=OPT.TheName%>Atom = atom(null, async (get, set, data) => {
+    const token = get(globalAtom).token;
+    const headers = token ? {Authorization: 'Bearer '+ token} : {} ;
+    const original = get(typingAtom);
+    console.log( original );
+    let payload = {};
+    for (const key in original) {
+        if (key.indexOf('_<%=OPT.the_name%>_') >= 0 ) {
+            const short_key = key.replace('_<%=OPT.the_name%>_', '');
+            payload[short_key] = original[key];
+        }
+    }
+
+    // console.log( payload );
+    const ret = handleResult(await mskPost( '/<%=OPT.the_name%>/save', payload, headers ));
+    return ret;
+
+});
+
+export const search<%=OPT.TheName%>Atom = atom(null, async (get, set, payload) => {
+    const token = get(globalAtom).token;
+    const headers = token ? {Authorization: 'Bearer '+ token} : {} ;
+    const ret = handleResult(await mskPost( '/<%=OPT.the_name%>/search', payload, headers ));
+    return ret;
+});
+
+export const remove<%=OPT.TheName%>Atom = atom(null, async (get, set, id) => {
+    const token = get(globalAtom).token;
+    const headers = token ? {Authorization: 'Bearer '+ token} : {} ;
+    const ret = handleResult(await mskPost( '/<%=OPT.the_name%>/remove', {id}, headers ));
+    return ret;
+});

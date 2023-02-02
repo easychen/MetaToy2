@@ -1,0 +1,82 @@
+/* @MT-TPL-FILE
+ * @Desc: 前端页面模板
+ * @To: web/src/page/<%=OPT.TheName%>List.jsx 
+ * @Replace: -
+ */
+import BackendView from "../component/BackendView";
+import { Button } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
+import { useAtom, useSetAtom } from 'jotai';
+import { useState, useEffect } from 'react';
+import { showNotification } from "@mantine/notifications";
+import { search<%=OPT.TheName%>Atom, remove<%=OPT.TheName%>Atom, } from '../store/<%=OPT.TheName%>';
+
+export default function <%=OPT.TheName%>() {
+    const nav = useNavigate();
+    const search<%=OPT.TheName%> = useSetAtom(search<%=OPT.TheName%>Atom);
+    const remove<%=OPT.TheName%> = useSetAtom(remove<%=OPT.TheName%>Atom);
+    const [list, setList] = useState(false);
+
+    async function loadList()
+    {
+        const ret = await search<%=OPT.TheName%>();
+        console.log( "ret", ret );
+        if( ret && ret.<%=OPT.the_name%>_array )
+        {
+            setList(ret.<%=OPT.the_name%>_array);
+        }
+    }
+
+    useEffect(()=>{
+        loadList();
+    },[]);
+
+    async function remove( id )
+    {
+        if( !window.confirm("确定要删除<%=OPT.TheName%>吗？") ) return false;
+        const ret = await remove<%=OPT.TheName%>(id);
+        if( ret && ret.<%=OPT.the_name%> )
+        {
+            showNotification({
+                title: "删除成功"
+            });
+            loadList();
+        }
+    }
+
+
+    return <BackendView>
+        <div className="flex flex-row justify-center">
+            <div className="p-32 flex flex-col items-center">
+                <span className="text-blue-400 bg-white rounded-full p-12 hover:border-1 text-5xl">😶</span>
+                <div className="text-xl mt-12 text-gray-500"><%=OPT.TheName%></div>
+            </div>
+        </div>
+        <div className="list-box">
+            <div className="flex flex-row justify-between px-5">
+                <div className="left"></div>
+                <div className="right"><Button variant="outline" onClick={()=>nav('/<%=OPT.the_name%>/create')}>新建</Button></div>
+            </div>
+            { list && Array.isArray(list) && list.length > 0 && <div className="bg-white p-5 m-5 hover:shadow border-1 border-gray-100">
+                { list.map((item, index)=>{
+                    return <div key={index} className="flex flex-row justify-between px-5 py-3">
+                        <div className="left">
+                        {/* @MT-TPL-WEB-LIST-FIELDS-START */
+                            <> 
+                            <%_ for( const field of H.fields(DATA,OPT.the_name,'search')??[])
+                            { if( field.in_list ){_%>
+                            <div className="<%=OPT.the_name%>-item <%=field.field%>">{item.<%=field.field%>}</div>
+                            <%_ }} _%>
+                            </>
+                             /* @MT-TPL-WEB-LIST-FIELDS-END */}
+                        </div>
+                        <div className="right">
+                            <Button variant="outline" onClick={()=>remove(item.id)}>删除</Button>
+                        </div>
+                    </div>
+                    })
+                }
+            </div> }
+        </div>
+    </BackendView>;
+}

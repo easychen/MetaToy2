@@ -1,0 +1,78 @@
+/* @MT-TPL-FILE
+ * @Desc: 后端路由更新
+ * @To: api/routes/api.php 
+ * @Replace: -
+ */
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+// 无需登入的API
+
+Route::any('/', function () {
+     return response()->json(['message' => 'Hello MetaStack!']);
+});
+
+Route::any('/{sha1}.url', 'App\Http\Controllers\SystemController@shortUrl');
+
+Route::any('/wechat/serve', 'App\Http\Controllers\UserController@wechatServe');
+
+Route::any('/wechat/qrcode', 'App\Http\Controllers\UserController@wechatQrcode');
+
+Route::any('/wechat/login/remote', 'App\Http\Controllers\UserController@wechatRemoteLogin');
+
+Route::any('/wechat/reload', 'App\Http\Controllers\UserController@wechatReload');
+
+// 注册用户可以访问的接口
+Route::middleware(['auth:sanctum','ability:member'])->group(function () {
+
+    Route::post('/token/remove', 'App\Http\Controllers\UserController@tokenRemove');
+
+    Route::post('/wechat/order/place', 'App\Http\Controllers\UserController@wechatOrderPlace');
+
+    Route::post('/wechat/order/check/{out_order_no}', 'App\Http\Controllers\UserController@checkOrder');
+
+    Route::post('/user/profile', 'App\Http\Controllers\UserController@profile');
+
+    Route::post('/token/list', 'App\Http\Controllers\UserController@tokenList');
+
+    Route::post('/token/create', 'App\Http\Controllers\UserController@tokenCreate');
+
+    /* @MT-TPL-ROUTE-LIST-START */
+    /* @Replace: append */
+    /* @SkipIf: Route::post('/<%=OPT.the_name%> */
+    <%_ for( action of ['save','update','remove','search'] ){_%>
+    Route::post('/<%=OPT.the_name%>/<%=H.low(action)%>', 'App\Http\Controllers\<%=OPT.TheName%>Controller@<%=H.lc(action)%>');    
+    <%_}_%>
+    /* @MT-TPL-ROUTE-LIST-END */
+
+    Route::post('/recharge_cards/use', 'App\Http\Controllers\RechargeCardsController@use');
+});
+
+// 协管员可以访问的接口(通常是应用部分功能的权限)
+Route::middleware(['auth:sanctum','ability:moderator'])->group(function () {
+    // ...
+});
+
+// 管理员可以访问的接口(通常是应用级权限)
+Route::middleware(['auth:sanctum','ability:admin'])->group(function () {
+    // ...
+});
+
+// 超级管理员可以访问的接口(通常是系统级权限)
+Route::middleware(['auth:sanctum','ability:super_admin'])->group(function () {
+    // ...
+});
+

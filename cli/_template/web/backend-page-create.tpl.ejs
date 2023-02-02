@@ -1,0 +1,51 @@
+/* @MT-TPL-FILE
+ * @Desc: 前端页面模板
+ * @To: web/src/page/<%=OPT.TheName%>Create.jsx 
+ * @Replace: overwrite
+ */
+import BackendView from "../component/BackendView";
+import { Button } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
+import TextLine from '../ui/TextLine';
+import { useAtom, useSetAtom } from 'jotai';
+import { showNotification } from '@mantine/notifications';
+import { typingAtom } from '../store/AppStore';
+import { save<%=OPT.TheName%>Atom } from '../store/<%=OPT.TheName%>';
+
+export default function <%=OPT.TheName%>() {
+    const nav = useNavigate();
+    const [, setTyping] = useAtom(typingAtom);
+    const save<%=OPT.TheName%> = useSetAtom(save<%=OPT.TheName%>Atom);
+    async function submit()
+    {
+        const ret = await save<%=OPT.TheName%>();
+        if( ret && ret.<%=OPT.the_name%> )
+        {
+            showNotification({'message': '保存成功', 'type': 'success'});
+            setTyping('action:clean');
+            nav('/<%=OPT.the_name%>/list');
+            // console.log( "ret", ret );
+        }
+        
+    }
+
+
+    return <BackendView>
+        <div className="list-box p-12">
+            创建<%=OPT.TheName%>
+        </div>
+        <div className="form px-12 py-2">
+            <%_ for( const field of H.fields(DATA,OPT.the_name,'create')??[]) { _%>
+            <%_ if( field.ui_type ){ _%>
+            <TextLine label="<%=field.cn_name%>" field="_<%=OPT.the_name%>_<%=field.name%>" type="<%=(field.type=='int')?'number':'text'%>" />
+            <%_ } // ui_type _%>
+            <%_ } _%>
+            <div className="flex flex-row justify-between mt-5">
+                <Button onClick={()=>submit()}>保存</Button>
+
+                <Button variant="outline" onClick={()=>nav('/<%=OPT.the_name%>/list')}>取消</Button>
+                
+            </div>
+        </div>
+    </BackendView>;
+}

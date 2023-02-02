@@ -1,0 +1,69 @@
+/* @MT-TPL-FILE
+ * @Desc: 前端路由更新
+ * @To: web/src/route/index.jsx 
+ * @Replace: -
+ */
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Router from './Router';
+
+import Index from '../page/Index';
+import Login from '../page/Login';
+import Forward from '../page/Forward';
+import Dashboard from '../page/Dashboard';
+import ApiToken from '../page/ApiToken';
+import AppQrCode from '../page/AppQrCode';
+import AutoLogin from '../page/AutoLogin';
+
+import WechatRecharge from '../page/WechatRecharge';
+import OrderCheck from '../page/OrderCheck';
+import Profile from '../page/Profile';
+
+/* @MT-TPL-IMPORT-LIST-START */
+/* @Replace: append */
+/* @SkipIf: import <%=OPT.TheName%>List */
+import <%=OPT.TheName%>List from '../page/<%=OPT.TheName%>List';
+/* @MT-TPL-IMPORT-LIST-END */
+
+/* @MT-TPL-IMPORT-CREATE-START */
+/* @Replace: append */
+/* @SkipIf: import <%=OPT.TheName%>Create */
+import <%=OPT.TheName%>Create from '../page/<%=OPT.TheName%>Create';
+/* @MT-TPL-IMPORT-CREATE-END */
+
+function RouteList() {
+  return (
+  <Router>
+    <Routes>
+        <Route path="/user/app/qrcode" element={<React.Suspense children={<AppQrCode />}/>} />
+        <Route path="/user/api/token" element={<React.Suspense children={<ApiToken />}/>} />
+        <Route path="/login/auto/:token" element={<React.Suspense children={<AutoLogin />}/>} />
+        <Route path="/wechat/forward" element={<React.Suspense children={<Forward />}/>} />
+        <Route path="/wechat/recharge" element={<React.Suspense children={<WechatRecharge />}/>} />
+        <Route path="/wechat/order/check/:oid" element={<React.Suspense children={<OrderCheck />}/>} />
+        <Route path="/profile" element={<React.Suspense children={<Profile />}/>} />
+        <Route path="/dashboard" element={<React.Suspense children={<Dashboard />}/>} />
+        <Route path="/login" element={<React.Suspense children={<Login />}/>} />
+        
+        {/* @MT-TPL-ROUTE_LIST-START */
+         /* @Replace: append */
+         /* @Wrap: react */
+         /* @SkipIf: path="/<%=OPT.the_name%>/list" */
+        <Route path="/<%=OPT.the_name%>/list" element={<React.Suspense children={<<%=OPT.TheName%>List />}/>} />
+         /* @MT-TPL-ROUTE_LIST-END */}
+
+        {/* @MT-TPL-ROUTE_CREATE-START */
+            /* @Replace: append */
+            /* @Wrap: react */
+            /* @SkipIf: path="/<%=OPT.the_name%>/create" */
+           <Route path="/<%=OPT.the_name%>/create" element={<React.Suspense children={<<%=OPT.TheName%>Create />}/>} />
+          /* @MT-TPL-ROUTE_CREATE-END */}
+        
+        
+        <Route path="/*" element={<React.Suspense children={<Index />}/>} />
+
+    </Routes>
+</Router>)
+}
+
+export default RouteList

@@ -1,0 +1,27 @@
+{
+    "scenarios":[
+        {"id":"default","name":"默认"},
+        {"id":"create","name":"新增"},
+        {"id":"update","name":"更新"},
+        {"id":"search","name":"查询"},
+        {"id":"remove","name":"删除"}
+    ],
+    "extra_fields":[
+        {"id":"cn_name","name":"中文名","values":null},
+        {"id":"ui_type","name":"UI类别","values":["","int","text","password","textarea","select","checkbox","radio","date","datetime","time","file","image","hidden"]},
+        {"id":"ui_options","name":"UI参数","values":null},
+        {"id":"from_request","name":"来自请求","values":null,"type":"checkbox"},
+        {"id":"validate_string","name":"校验字符串","values":null},
+        {"id":"default1","name":"手动默认","values":null,"type":"checkbox"},
+        {"id":"in_list","name":"参与列表","values":null,"type":"checkbox"},
+        {"id":"source_func","name":"来源函数","values":["","mt_uid()","mt_now()","mt_rand_string()"]},
+        {"id":"notes","name":"备注","values":null}
+    ],
+    "mysql":{
+        "host":"localhost",
+        "port":3306,
+        "user":"root",
+        "password":"",
+        "database":"metastack"
+    }
+}
