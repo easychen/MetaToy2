@@ -22,7 +22,7 @@ MetaToy 是一个通用代码生成工具。它包含两部分：
 一个典型的命令如下：
 
 ```bash
-node .metatoy/exec.mjs api controller --name=Book --cn_name=书籍
+node .metatoy/exec.mjs new api controller --name=Book --cn_name=书籍
 ```
 
 其中 `api controller` 部分对应 `.metatoy/_template` 下的 `api/controller.tpl.ejs` 文件。
@@ -30,7 +30,7 @@ node .metatoy/exec.mjs api controller --name=Book --cn_name=书籍
 如果想要生成 api 目录下的全部模板，那么可以 
 
 ```bash
-node .metatoy/exec.mjs api --name=Book --cn_name=书籍
+node .metatoy/exec.mjs new api --name=Book --cn_name=书籍
 ```
 
 具体逻辑可以查看 `.metatoy/exec.mjs`
